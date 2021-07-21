@@ -1,0 +1,89 @@
+// Nabilla Driesandia Azarine
+// 2301846383 - UAS IOT LB03
+
+
+#include <Arduino.h>
+#include <Wifi.h>
+#include <PubSubClient.h>
+
+const char* ssid="SPAM_X";
+const char* pass="password1";
+const char* brokerUser = "nabillazarine@gmail.com";
+const char* brokerPass = "password2";
+
+// password yang digunakan saya ganti untuk kepentingan privasi
+
+const char* broker = " 192.168.100.10";
+const char* outTopic ="nabillazarine@gmail.com/out";
+const char* inTopic ="nabillazarine@gmail.com/in";
+ 
+ 
+WiFiClient espClient;
+PubSubClient client(espClient);
+long currentTime, lastTime;
+int count = 0;
+char messages[50];
+ 
+void setupWifi(){
+  delay(100);
+  Serial.print("\nConnecting to ");
+  Serial.println(ssid);
+ 
+  WiFi.begin(ssid, pass);
+ 
+  while(WiFi.status() != WL_CONNECTED) {
+    delay(100);
+    Serial.print("-");
+  }
+ 
+  Serial.print("\nConnected to ");
+  Serial.println(ssid);
+}
+ 
+void reconnect(){
+  while(!client.connected()){
+    Serial.print("\nConnecting to ");
+    Serial.println(broker);
+    if(client.connect("uasIOT", brokerUser, brokerPass)){
+      Serial.print("\nConnected to ");
+      Serial.println(broker);
+      client.subscribe(inTopic);
+    } else {
+      Serial.println("\nTrying to reconnect");
+      delay(5000);
+    }
+  }
+}
+ 
+void callback(char* topic, byte* payload, unsigned int length){
+  Serial.print("Received Messages: ");
+  Serial.println(topic);
+  for(int i=0; i<length; i++){
+    Serial.print((char) payload[i]);
+  }
+  Serial.println();
+}
+ 
+void setup() {
+    Serial.begin(115200);
+    setupWifi();
+    client.setServer(broker, 1883);
+    client.setCallback(callback);
+}
+ 
+void loop() {
+    if (!client.connected()){
+      reconnect();
+    }
+  client.loop();
+ 
+  currentTime = millis();
+  if(currentTime - lastTime > 2000){
+    count++;
+    snprintf(messages, 75, "Count: %ld", count);
+    Serial.print("Sending Messages: ");
+    Serial.println(messages);
+    client.publish(outTopic, messages);
+    lastTime = millis();
+  }
+}
