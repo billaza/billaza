@@ -1,4 +1,6 @@
 <resources>
-    <string name="app_name">My Spending</string>
-    <string name="rupiah">Rp. %1$s</string>
+    <string name="app_name">XYZ Dictionary</string>
+    <string name="menu1">Explore</string>
+    <string name="menu2">Favorites</string>
+    <string name="search_box">Type to search ...</string>
 </resources>
