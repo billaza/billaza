@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">My Spending</string>
+    <string name="rupiah">Rp. %1$s</string>
+</resources>
