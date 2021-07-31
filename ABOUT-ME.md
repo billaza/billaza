@@ -1,3 +1,0 @@
-- 👋 Hi, I’m @billaza
-- 👀 I’m interested in product design.
-- 🌱 I’m currently learning mobile application and technology.
